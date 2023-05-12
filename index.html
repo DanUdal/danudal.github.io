@@ -5,24 +5,37 @@
         <title> 
             Dan Udal Portfolio
         </title>
+        <script>
+            function home() {
+                document.getElementById("content").src = "home.html";
+            }
+        </script>
     </head>
 
     <body>
         <div id="title">
             <h1>Test Title</h1>
         </div>
-        <header>
-            <h2>Demos in Exampland</h2>
-            <p>Written by A. N. Other.</p>
-        </header>
-        <div class="topnav">
-            <a class="active" href="index.html">Home</a>
-            <a href="#news">News</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
+        <div id="navbar">
+            <p id="navtitle">
+                text
+            </p>
+            <div class="navbox" onclick="home()">
+                1
+            </div>
+            <div class="navbox">
+                2
+            </div>
+            <div class="navbox">
+                3
+            </div>
+            <div class="navbox">
+                4
+            </div>
         </div>
+        <iframe id="content" src="blank.html"></iframe>
         <footer>
-            <p><a href="?edit">Edit</a> | <a href="?delete">Delete</a> | <a href="?Rename">Rename</a></p>
+            
         </footer>
     </body>
 </html>
