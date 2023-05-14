@@ -5,10 +5,11 @@
         <title> 
             Dan Udal Portfolio
         </title>
-        <script>
-            function home() {
+        <script> 
+            function home(url) {
                 document.getElementById("content").src = "home.html";
-            }
+                console.log(url);
+                }
         </script>
     </head>
 
@@ -20,7 +21,7 @@
             <p id="navtitle">
                 text
             </p>
-            <div class="navbox" onclick="home()">
+            <div class="navbox" onclick="home('home.html')">
                 1
             </div>
             <div class="navbox">
@@ -33,7 +34,7 @@
                 4
             </div>
         </div>
-        <iframe id="content" src="blank.html"></iframe>
+        <embed id="content" src="blank.html">
         <footer>
             
         </footer>
