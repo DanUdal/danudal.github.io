@@ -1,6 +1,7 @@
 body {
-    background: rgb(161,161,161);
-    background: linear-gradient(90deg, rgb(129, 129, 129) 0%, rgba(0,0,0,1) 100%);
+    background-image: radial-gradient(circle, rgb(100, 100, 100) 0%, rgb(32, 32, 32) 30%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 #title {
@@ -20,13 +21,24 @@ body {
 }
 
 #navbar {
-    height: 100px;
+    height: 100%;
+    float: left;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgb(100, 100, 100);
+    width: 12%;
+    opacity: 50%;
+    text-align: center;
+    z-index: 3;
 }
 
 .navbox {
-    width: 24%;
+    width: 100%;
     margin: 0;
     float: left;
+    font-size: 20px;
+    height: 50px;
 }
 
 #navtitle {
@@ -40,4 +52,5 @@ body {
 #content {
     margin: 0;
     border: 0;
+    width: 90%;
 }

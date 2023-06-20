@@ -7,22 +7,19 @@
         </title>
         <script> 
             function home(url) {
-                document.getElementById("content").src = "home.html";
+                document.getElementById("content").src = url;
                 console.log(url);
                 }
         </script>
     </head>
 
     <body>
-        <div id="title">
-            <h1>Test Title</h1>
-        </div>
         <div id="navbar">
             <p id="navtitle">
-                text
+                
             </p>
             <div class="navbox" onclick="home('home.html')">
-                1
+                Home
             </div>
             <div class="navbox">
                 2
@@ -34,7 +31,10 @@
                 4
             </div>
         </div>
-        <embed id="content" src="blank.html">
+        <div id="title">
+            <h1>Test Title</h1>
+        </div>
+        <embed id="content" src="home.html">
         <footer>
             
         </footer>
