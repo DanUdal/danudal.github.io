@@ -52,5 +52,7 @@ body {
 #content {
     margin: 0;
     border: 0;
-    width: 90%;
+    width: 95%;
+    height: 85%;
+    position: absolute;
 }
