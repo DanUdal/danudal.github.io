@@ -21,8 +21,7 @@ class ray
         far = clone(near);
         far[2] = 1;
         proj[10] = -(zfar + znear)/(zfar - znear);
-        proj[14] = -1;
-        proj[11] = -(2 * zfar * znear)/(zfar - znear);
+        proj[14] = -(2 * zfar * znear)/(zfar - znear);
         var invProj = mat4.create();
         invert(invProj, proj);
         vec4.transformMat4(near, near, invProj);
@@ -70,13 +69,15 @@ export default class tracer
     {
         
         this.scene = new scene();
-        this.scene.addObject(new sphere(vec4.create(400, 400, 400, 1), vec3.create(255, 0, 0), 100));
+        this.scene.addObject(new sphere(vec4.create(600, 600, -400, 1), vec3.create(255, 0, 0), 50));
         this.rays = [];
         var x = canvas.getAttribute("width");
         var y = canvas.getAttribute("height");
         var proj = mat4.create();
         proj[0] = 1 / ((canvas.getAttribute("width")/canvas.getAttribute("height")) * Math.tan(fov/2));
         proj[5] = 1 / Math.tan(fov/2);
+        proj[15] = 0;
+        proj[11] = -1;
         this.colours = new Uint8ClampedArray(x * y * 4);
         for (var j = 0; j < x; j++)
         {
@@ -98,20 +99,36 @@ export default class tracer
         var y = canvas.getAttribute("height");
         var intsec;
         var e = 0;
+        var r = 0;
         for (var j = 0; j < x; j++)
         {
             for (var i = 0; i < y; i++)
             {
                 this.scene.objects.forEach(obj => {
-                    intsec = obj.intersect(this.rays[(j * x) + i]);
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[(j * x) + i])[0];
-                    e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[(j * x) + i])[1];
-                    e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[(j * x) + i])[2];
-                    e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[(j * x) + i])[3];
-                    e++;
+                    intsec = obj.intersect(this.rays[r]);
+                    if (intsec[0] != -1)
+                    {
+                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[0];
+                        e++;
+                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[1];
+                        e++;
+                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[2];
+                        e++;
+                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[3];
+                        e++;
+                    }
+                    else
+                    {
+                        this.colours[e] = 0;
+                        e++;
+                        this.colours[e] = 0;
+                        e++;
+                        this.colours[e] = 0;
+                        e++;
+                        this.colours[e] = 0;
+                        e++;
+                    }
+                    r++;
                 });
             }
         }
