@@ -10,20 +10,18 @@ const ctx = canvas.getContext("2d");
 const fov = Math.PI/4;
 const znear = 1;
 const zfar = 1000;
+const x = canvas.getAttribute("width");
+const y = canvas.getAttribute("height");
 
 class ray 
 {
-    constructor(position, proj)
+    constructor(position, invProj)
     {
         var near;
         near = clone(position);
         var far;
         far = clone(near);
         far[2] = 1;
-        proj[10] = -(zfar + znear)/(zfar - znear);
-        proj[14] = -(2 * zfar * znear)/(zfar - znear);
-        var invProj = mat4.create();
-        invert(invProj, proj);
         vec4.transformMat4(near, near, invProj);
         vec4.transformMat4(far, far, invProj);
         near[0] /= near[3];
@@ -43,22 +41,22 @@ class ray
         this.start[0] += 1;
         this.start[1] += 1;
         this.start[2] = znear;
-        this.start[0] *= canvas.getAttribute("width");
-        this.start[1] *= canvas.getAttribute("height");
+        this.start[0] *= x;
+        this.start[1] *= y;
     }
 
     normalize(out, vector)
     {
-        var x = vector[0];
-        var y = vector[1];
-        var z = vector[2];
-        var len = x * x + y * y + z * z;
+        var a = vector[0];
+        var b = vector[1];
+        var c = vector[2];
+        var len = a * a + b * b + c * c;
         if (len > 0) {
             len = 1 / Math.sqrt(len);
         }
-        out[0] = x * len;
-        out[1] = y * len;
-        out[2] = z * len;
+        out[0] = a * len;
+        out[1] = b * len;
+        out[2] = c * len;
         out[3] = vector[3];
     }
 }
@@ -71,13 +69,16 @@ export default class tracer
         this.scene = new scene();
         this.scene.addObject(new sphere(vec4.create(600, 600, -400, 1), vec3.create(255, 0, 0), 50));
         this.rays = [];
-        var x = canvas.getAttribute("width");
-        var y = canvas.getAttribute("height");
         var proj = mat4.create();
-        proj[0] = 1 / ((canvas.getAttribute("width")/canvas.getAttribute("height")) * Math.tan(fov/2));
-        proj[5] = 1 / Math.tan(fov/2);
+        var halftan = Math.tan(fov/2);
+        proj[0] = 1 / ((canvas.getAttribute("width")/canvas.getAttribute("height")) * halftan);
+        proj[5] = 1 / halftan;
         proj[15] = 0;
         proj[11] = -1;
+        proj[10] = -(zfar + znear)/(zfar - znear);
+        proj[14] = -(2 * zfar * znear)/(zfar - znear);
+        var invProj = mat4.create();
+        invert(invProj, proj);
         this.colours = new Uint8ClampedArray(x * y * 4);
         for (var j = 0; j < x; j++)
         {
@@ -88,15 +89,13 @@ export default class tracer
                 pos[1] = (2 * j / y) - 1;
                 pos[2] = -1;
                 pos[3] = 1;
-                this.rays.push(new ray(pos, proj));
+                this.rays.push(new ray(pos, invProj));
             }
         }
     }
 
     trace()
     {
-        var x = canvas.getAttribute("width");
-        var y = canvas.getAttribute("height");
         var intsec;
         var e = 0;
         var r = 0;
@@ -104,32 +103,37 @@ export default class tracer
         {
             for (var i = 0; i < y; i++)
             {
+                intsec = 10^8;
                 this.scene.objects.forEach(obj => {
-                    intsec = obj.intersect(this.rays[r]);
-                    if (intsec[0] != -1)
+                    var testIntsec = obj.intersect(this.rays[r]);
+                    if (testIntsec < intsec)
                     {
-                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[0];
-                        e++;
-                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[1];
-                        e++;
-                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[2];
-                        e++;
-                        this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[3];
-                        e++;
+                        intsec = testIntsec;
                     }
-                    else
-                    {
-                        this.colours[e] = 0;
-                        e++;
-                        this.colours[e] = 0;
-                        e++;
-                        this.colours[e] = 0;
-                        e++;
-                        this.colours[e] = 0;
-                        e++;
-                    }
-                    r++;
                 });
+                if (intsec[0] != -1)
+                {
+                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[0];
+                    e++;
+                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[1];
+                    e++;
+                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[2];
+                    e++;
+                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[3];
+                    e++;
+                }
+                else
+                {
+                    this.colours[e] = 0;
+                    e++;
+                    this.colours[e] = 0;
+                    e++;
+                    this.colours[e] = 0;
+                    e++;
+                    this.colours[e] = 0;
+                    e++;
+                }
+                r++;
             }
         }
         var imageData = new ImageData(this.colours, x, y);
