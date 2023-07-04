@@ -99,6 +99,7 @@ export default class tracer
         var intsec;
         var e = 0;
         var r = 0;
+        var object;
         for (var j = 0; j < x; j++)
         {
             for (var i = 0; i < y; i++)
@@ -109,17 +110,18 @@ export default class tracer
                     if (testIntsec < intsec)
                     {
                         intsec = testIntsec;
+                        object = obj;
                     }
                 });
                 if (intsec[0] != -1)
                 {
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[0];
+                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[0];
                     e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[1];
+                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[1];
                     e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[2];
+                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[2];
                     e++;
-                    this.colours[e] = obj.calcColour(length(intsec), this.rays[r])[3];
+                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[3];
                     e++;
                 }
                 else
