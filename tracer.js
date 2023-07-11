@@ -12,6 +12,7 @@ const znear = 1;
 const zfar = 1000;
 const x = canvas.getAttribute("width");
 const y = canvas.getAttribute("height");
+const infinity = Math.pow(2, 14);
 
 class ray 
 {
@@ -104,24 +105,26 @@ export default class tracer
         {
             for (var i = 0; i < y; i++)
             {
-                intsec = 10^8;
+                intsec = vec3.create(infinity, infinity, infinity);
+                var index = 0;
                 this.scene.objects.forEach(obj => {
                     var testIntsec = obj.intersect(this.rays[r]);
-                    if (testIntsec < intsec)
+                    if ((length(testIntsec) < length(intsec)) && (testIntsec[0] != -1))
                     {
                         intsec = testIntsec;
-                        object = obj;
+                        object = index;
                     }
+                    index++;
                 });
-                if (intsec[0] != -1)
+                if (intsec[0] != infinity)
                 {
-                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[0];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[0];
                     e++;
-                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[1];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[1];
                     e++;
-                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[2];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[2];
                     e++;
-                    this.colours[e] = object.calcColour(length(intsec), this.rays[r])[3];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[3];
                     e++;
                 }
                 else
