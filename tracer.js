@@ -12,7 +12,7 @@ const znear = 1;
 const zfar = 1000;
 const x = canvas.getAttribute("width");
 const y = canvas.getAttribute("height");
-const infinity = Math.pow(2, 14);
+const infinity = Math.pow(2, 63);
 
 class ray 
 {
@@ -118,13 +118,13 @@ export default class tracer
                 });
                 if (intsec[0] != infinity)
                 {
-                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[0];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r], this.scene)[0];
                     e++;
-                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[1];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r], this.scene)[1];
                     e++;
-                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[2];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r], this.scene)[2];
                     e++;
-                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r])[3];
+                    this.colours[e] = this.scene.objects[object].calcColour(length(intsec), this.rays[r], this.scene)[3];
                     e++;
                 }
                 else

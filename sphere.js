@@ -30,8 +30,13 @@ export default class sphere
         return intsec;
     }
 
-    calcColour(intsec, ray)
+    calcColour(intsec, ray, scene)
     {
+        var normal;
+        var lightVec;
+        var angle;
+        var colour;
+        var half;
         return vec4.create(255, 255, 255, 255);
     }
 }
